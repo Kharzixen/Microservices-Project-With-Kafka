@@ -1,12 +1,12 @@
 package com.kharzixen.cartservice.mapper;
 
-import com.kharzixen.cartservice.dto.CartDtoIn;
-import com.kharzixen.cartservice.dto.CartDtoOut;
+import com.kharzixen.cartservice.dto.request.CartDtoIn;
+import com.kharzixen.cartservice.dto.response.CartDtoOut;
+import com.kharzixen.cartservice.dto.response.CartDtoOutNoItems;
 import com.kharzixen.cartservice.model.Cart;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-import java.util.Collection;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
@@ -18,6 +18,7 @@ public interface CartMapper {
 
     Cart modelFromDto(CartDtoIn cartDtoIn);
 
+    CartDtoOutNoItems modelToDtoNoItems(Cart cart);
 
     List<CartDtoOut> modelsToDtos(List<Cart> carts);
 

@@ -1,10 +1,8 @@
 package com.kharzixen.cartservice.mapper;
 
-import com.kharzixen.cartservice.dto.CartDtoIn;
-import com.kharzixen.cartservice.dto.CartDtoOut;
-import com.kharzixen.cartservice.dto.ItemDtoIn;
-import com.kharzixen.cartservice.dto.ItemDtoOut;
-import com.kharzixen.cartservice.model.Cart;
+import com.kharzixen.cartservice.dto.request.ItemDtoIn;
+import com.kharzixen.cartservice.dto.response.ItemDtoOut;
+import com.kharzixen.cartservice.dto.response.ItemDtoOutDetailed;
 import com.kharzixen.cartservice.model.Item;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -17,8 +15,12 @@ public interface ItemMapper {
 
     ItemDtoOut modelToDto(Item item);
 
+    ItemDtoOutDetailed modelToDetailedDto(Item item);
+
     Item modelFromDto(ItemDtoIn itemDtoIn);
 
 
     List<ItemDtoOut> modelsToDtos(List<Item> items);
+
+    List<ItemDtoOutDetailed> modelsToDetailedDtos(List<Item> items);
 }

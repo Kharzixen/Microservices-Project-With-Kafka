@@ -1,4 +1,4 @@
-package com.kharzixen.cartservice.dto;
+package com.kharzixen.cartservice.error_handling.errors;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CartDtoIn {
-    private String userId;
+public class ErrorResponse {
+    private int status;
+    private String message;
+
 }

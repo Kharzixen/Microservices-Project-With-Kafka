@@ -23,6 +23,9 @@ public class InventoryService {
         if(inventory.getSellingPrice() == null){
             inventory.setSellingPrice(BigDecimal.valueOf(0.0));
         }
+        if(inventory.getQuantity() == null){
+            inventory.setQuantity(0);
+        }
         Inventory saved = inventoryRepository.save(inventory);
         return InventoryMapper.INSTANCE.modelToDto(saved);
     }
@@ -42,7 +45,46 @@ public class InventoryService {
         return optionalInventory.map(InventoryMapper.INSTANCE::modelToDto);
     }
 
-    public Optional<InventoryOutDto> updateInventory(InventoryInDto inventoryInDto){
-        return Optional.empty();
+    public Optional<InventoryOutDto> patchInventoryBySkuCode(String skuCode, InventoryInDto inventoryInDto){
+        Inventory newInventory = InventoryMapper.INSTANCE.dtoToModel(inventoryInDto);
+        Optional<Inventory> optionalInventory = inventoryRepository.findByStorageKeepingUnit(skuCode);
+        Inventory inventory;
+
+        //get the inventory by skuCode, if is not present empty -> not found
+        if(optionalInventory.isPresent()){
+            inventory = optionalInventory.get();
+        } else {
+            return Optional.empty();
+        }
+
+        //if there is a quantity field in the input object update it and return the updated
+        if(newInventory.getQuantity() != null){
+            inventory.setQuantity(newInventory.getQuantity());
+        }
+
+        Inventory saved = inventoryRepository.save(inventory);
+        return Optional.of(InventoryMapper.INSTANCE.modelToDto(saved));
     }
+
+    public Optional<InventoryOutDto> patchInventoryByProductId(String productId, InventoryInDto inventoryInDto){
+        Inventory newInventory = InventoryMapper.INSTANCE.dtoToModel(inventoryInDto);
+        Optional<Inventory> optionalInventory = inventoryRepository.findByProductId(productId);
+        Inventory inventory;
+
+        //get the inventory by skuCode, if is not present empty -> not found
+        if(optionalInventory.isPresent()){
+            inventory = optionalInventory.get();
+        } else {
+            return Optional.empty();
+        }
+
+        //if there is a quantity field in the input object update it and return the updated
+        if(newInventory.getQuantity() != null){
+            inventory.setQuantity(newInventory.getQuantity());
+        }
+
+        Inventory saved = inventoryRepository.save(inventory);
+        return Optional.of(InventoryMapper.INSTANCE.modelToDto(saved));
+    }
+
 }

@@ -18,6 +18,6 @@ import java.math.BigDecimal;
 public class InventoryInDto {
     String productId;
     String storageKeepingUnit;
-    int quantity;
+    Integer quantity;
     BigDecimal sellingPrice;
 }

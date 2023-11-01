@@ -24,7 +24,7 @@ public class Inventory {
     @Column(unique = true)
     String storageKeepingUnit;
 
-    int quantity;
+    Integer quantity;
 
     BigDecimal sellingPrice;
 }

@@ -19,5 +19,6 @@ public class InventoryOutDto {
     Long id;
     String productId;
     String storageKeepingUnit;
+    Integer quantity;
     BigDecimal sellingPrice;
 }

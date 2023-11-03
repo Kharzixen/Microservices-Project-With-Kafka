@@ -2,6 +2,8 @@ package com.kharzixen.inventoryservice.controller;
 
 import com.kharzixen.inventoryservice.dto.incomming.InventoryInDto;
 import com.kharzixen.inventoryservice.dto.outgoing.InventoryOutDto;
+import com.kharzixen.inventoryservice.error_handling.error.ErrorResponse;
+import com.kharzixen.inventoryservice.error_handling.exception.InventoryNotFoundException;
 import com.kharzixen.inventoryservice.service.InventoryService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -40,14 +42,14 @@ public class InventoryController {
             if (optionalInventoryOutDto.isPresent()) {
                 return new ResponseEntity<>(optionalInventoryOutDto.get(), HttpStatus.OK);
             } else {
-                throw new RuntimeException("Inventory not found");
+                throw new InventoryNotFoundException("productId",productId);
             }
         } else {
             Optional<InventoryOutDto> optionalInventoryOutDto = inventoryService.getInventoryBySkuCode(skuCode);
             if (optionalInventoryOutDto.isPresent()) {
                 return new ResponseEntity<>(optionalInventoryOutDto.get(), HttpStatus.OK);
             } else {
-                throw new RuntimeException("Inventory not found");
+                throw new InventoryNotFoundException("skuCode", skuCode);
             }
         }
 
@@ -60,7 +62,7 @@ public class InventoryController {
             @RequestParam(value = "skuCode", required = false) String skuCode) {
 
         if (productId == null && skuCode == null) {
-            throw new RuntimeException("Not Found");
+            throw new InventoryNotFoundException();
         }
 
         else if (productId != null) {
@@ -68,16 +70,23 @@ public class InventoryController {
             if (optionalInventoryOutDto.isPresent()) {
                 return new ResponseEntity<>(optionalInventoryOutDto.get(), HttpStatus.OK);
             } else {
-                throw new RuntimeException("Inventory not found");
+                throw new InventoryNotFoundException("productId", productId);
             }
         } else {
             Optional<InventoryOutDto> optionalInventoryOutDto = inventoryService.patchInventoryBySkuCode(skuCode, inventoryInDto);
             if (optionalInventoryOutDto.isPresent()) {
                 return new ResponseEntity<>(optionalInventoryOutDto.get(), HttpStatus.OK);
             } else {
-                throw new RuntimeException("Inventory not found");
+                throw new InventoryNotFoundException("skuCode", skuCode);
             }
         }
-
     }
+
+
+    @ExceptionHandler(InventoryNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleInventoryNotFoundException(InventoryNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
 }

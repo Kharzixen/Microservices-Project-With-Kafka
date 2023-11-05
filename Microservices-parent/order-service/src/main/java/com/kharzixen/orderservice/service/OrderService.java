@@ -26,7 +26,7 @@ public class OrderService {
 
         //catch errors, http status etc
         CartDto cart = webClientBuilder.build().get()
-                .uri("http://localhost:8082/api/carts/", uriBuilder -> uriBuilder.path("/{id}").build(cartId))
+                .uri("http://cart-service/api/carts/", uriBuilder -> uriBuilder.path("/{id}").build(cartId))
                 .retrieve()
                 .bodyToMono(CartDto.class)
                 .block();
@@ -44,7 +44,7 @@ public class OrderService {
         for (CartItemDto cartItem : cart.getItemList()) {
             //catch errors, http status etc
             InventoryDto inventory = webClientBuilder.build().get()
-                    .uri("http://localhost:8083/api/inventory", uriBuilder -> uriBuilder.queryParam("productId", cartItem.getProductId()).build())
+                    .uri("http://inventory-service/api/inventory", uriBuilder -> uriBuilder.queryParam("productId", cartItem.getProductId()).build())
                     .retrieve()
                     .bodyToMono(InventoryDto.class)
                     .block();

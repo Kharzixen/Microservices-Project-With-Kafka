@@ -3,6 +3,7 @@ package com.kharzixen.orderservice.service;
 import com.kharzixen.orderservice.Dto.CartDto;
 import com.kharzixen.orderservice.Dto.CartItemDto;
 import com.kharzixen.orderservice.Dto.InventoryDto;
+import com.kharzixen.orderservice.client.CartServiceClient;
 import com.kharzixen.orderservice.repository.OrderItemRepository;
 import com.kharzixen.orderservice.repository.OrderRepository;
 import jakarta.transaction.Transactional;
@@ -11,8 +12,6 @@ import lombok.extern.java.Log;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.List;
-
 @Service
 @AllArgsConstructor
 @Log
@@ -20,16 +19,20 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final WebClient.Builder webClientBuilder;
+    private final CartServiceClient cartServiceClient;
 
     @Transactional
-    public void createOrder(String cartId) {
+    public String createOrder(String cartId) {
 
-        //catch errors, http status etc
-        CartDto cart = webClientBuilder.build().get()
-                .uri("http://cart-service/api/carts/", uriBuilder -> uriBuilder.path("/{id}").build(cartId))
-                .retrieve()
-                .bodyToMono(CartDto.class)
-                .block();
+        //catch errors, http status etc.
+
+        //        CartDto cart = webClientBuilder.build().get()
+        //                .uri("http://cart-service/api/carts/", uriBuilder -> uriBuilder.path("/{id}").build(cartId))
+        //                .retrieve()
+        //                .bodyToMono(CartDto.class)
+        //                .block();
+
+        CartDto cart = cartServiceClient.getCartById(cartId);
 
         if (cart == null) {
             throw new RuntimeException("Cart not found");
@@ -60,8 +63,10 @@ public class OrderService {
 
         if (areAllProductsInStock) {
             log.severe("ORDER PLACED AS PENDING");
+            return "ORDER PLACED AS PENDING";
         } else {
             log.severe("Cannot place order");
+            return "Cannot place order";
         }
 
 

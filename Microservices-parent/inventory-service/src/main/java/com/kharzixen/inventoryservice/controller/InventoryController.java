@@ -27,32 +27,39 @@ public class InventoryController {
     }
 
 
+//    @GetMapping
+//    public ResponseEntity<?> getInventoryForProduct(
+//            @RequestParam(value = "productId", required = false) String productId,
+//            @RequestParam(value = "skuCode", required = false) String skuCode) {
+//
+//        if (productId == null && skuCode == null) {
+//            List<InventoryOutDto> fullInventory = inventoryService.getFullInventory();
+//            return new ResponseEntity<>(fullInventory, HttpStatus.OK);
+//        }
+//
+//        else if (productId != null) {
+//            Optional<InventoryOutDto> optionalInventoryOutDto = inventoryService.getInventoryByProductId(productId);
+//            if (optionalInventoryOutDto.isPresent()) {
+//                return new ResponseEntity<>(optionalInventoryOutDto.get(), HttpStatus.OK);
+//            } else {
+//                throw new InventoryNotFoundException("productId",productId);
+//            }
+//        } else {
+//            Optional<InventoryOutDto> optionalInventoryOutDto = inventoryService.getInventoryBySkuCode(skuCode);
+//            if (optionalInventoryOutDto.isPresent()) {
+//                return new ResponseEntity<>(optionalInventoryOutDto.get(), HttpStatus.OK);
+//            } else {
+//                throw new InventoryNotFoundException("skuCode", skuCode);
+//            }
+//        }
+//
+//    }
+
     @GetMapping
-    public ResponseEntity<?> getInventoryForProduct(
-            @RequestParam(value = "productId", required = false) String productId,
-            @RequestParam(value = "skuCode", required = false) String skuCode) {
-
-        if (productId == null && skuCode == null) {
-            List<InventoryOutDto> fullInventory = inventoryService.getFullInventory();
-            return new ResponseEntity<>(fullInventory, HttpStatus.OK);
-        }
-
-        else if (productId != null) {
-            Optional<InventoryOutDto> optionalInventoryOutDto = inventoryService.getInventoryByProductId(productId);
-            if (optionalInventoryOutDto.isPresent()) {
-                return new ResponseEntity<>(optionalInventoryOutDto.get(), HttpStatus.OK);
-            } else {
-                throw new InventoryNotFoundException("productId",productId);
-            }
-        } else {
-            Optional<InventoryOutDto> optionalInventoryOutDto = inventoryService.getInventoryBySkuCode(skuCode);
-            if (optionalInventoryOutDto.isPresent()) {
-                return new ResponseEntity<>(optionalInventoryOutDto.get(), HttpStatus.OK);
-            } else {
-                throw new InventoryNotFoundException("skuCode", skuCode);
-            }
-        }
-
+    public ResponseEntity<List<InventoryOutDto>> getMultipleInventoryByMultipleIds(
+            @RequestParam(value = "productIds", required = false) List<String> productIds){
+        Optional<List<InventoryOutDto>> res = inventoryService.getInventoryListByProductIdList(productIds);
+        return res.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.ok(List.of()));
     }
 
     @PatchMapping

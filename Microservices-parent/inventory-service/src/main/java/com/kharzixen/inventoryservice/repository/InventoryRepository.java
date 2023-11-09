@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface InventoryRepository extends JpaRepository<Inventory, Long> {
 
-    Optional<Inventory> findByStorageKeepingUnit(String storageKeepingUnit);
-    Optional<Inventory> findByProductId(String productId);
+    Inventory findByStorageKeepingUnit(String storageKeepingUnit);
+    Inventory findByProductId(String productId);
 }

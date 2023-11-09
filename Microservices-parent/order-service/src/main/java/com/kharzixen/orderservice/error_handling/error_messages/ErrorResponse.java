@@ -1,4 +1,4 @@
-package com.kharzixen.inventoryservice.error_handling.error;
+package com.kharzixen.orderservice.error_handling.error_messages;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

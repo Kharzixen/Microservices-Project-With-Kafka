@@ -2,6 +2,10 @@
  
 > [!WARNING]
 > This software is unfinished. Keep your expectations low.
+>
+> Please be aware that this project is currently in an unfinished state and may have incomplete features or issues. While we are actively working on it, there might be bugs, missing functionality, or unpolished areas. 
+> 
+> If you encounter any issues, have feedback, or want to provide tips or suggestions for improvement, we welcome your input. Feel free to reach out to us at [your-email@example.com] with your feedback and concerns. Your input will be greatly appreciated in helping us improve this project.
 
 ## Introduction
 

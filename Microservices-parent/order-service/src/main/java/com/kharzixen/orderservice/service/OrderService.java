@@ -1,14 +1,15 @@
 package com.kharzixen.orderservice.service;
 
-import com.kharzixen.orderservice.Dto.CartDto;
-import com.kharzixen.orderservice.Dto.CartItemDto;
-import com.kharzixen.orderservice.Dto.InventoryDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kharzixen.orderservice.dto.CartDto;
+import com.kharzixen.orderservice.dto.CartItemDto;
+import com.kharzixen.orderservice.dto.InventoryDto;
 import com.kharzixen.orderservice.client.CartClient;
-import com.kharzixen.orderservice.client.InventoryClient;
-import com.kharzixen.orderservice.error_handling.exceptions.InsufficientInventoryException;
 import com.kharzixen.orderservice.error_handling.exceptions.OrderBadRequestException;
 import com.kharzixen.orderservice.event.OrderNotificationEvent;
 import com.kharzixen.orderservice.event.OrderValidationEvent;
+import com.kharzixen.orderservice.mapper.OrderMapper;
 import com.kharzixen.orderservice.model.Order;
 import com.kharzixen.orderservice.model.OrderItem;
 import com.kharzixen.orderservice.repository.OrderItemRepository;
@@ -30,13 +31,12 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final CartClient cartClient;
-    private final InventoryClient inventoryClient;
 
-    private final KafkaTemplate<String, OrderNotificationEvent> notificationTemplate;
-    private final KafkaTemplate<String, OrderValidationEvent> orderValidationTemplate;
+    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final ObjectMapper objectMapper;
 
 
-    @Transactional
+
     public String createOrder(String cartId) {
 
         //catch errors, http status etc
@@ -58,43 +58,37 @@ public class OrderService {
 
         log.severe("ORDER PLACED AS PENDING");
         Order order = convertCartToOrder(cart);
+        Order savedOrder = orderRepository.save(order);
+
         try {
-            notificationTemplate.send("notificationTopic", new OrderNotificationEvent(
-                    order.getId(), order.getUserId(), ZonedDateTime.now(), order.getStatus())
+            OrderNotificationEvent orderNotificationEvent = new OrderNotificationEvent(
+                    savedOrder.getId(), savedOrder.getUserId(), savedOrder.getCreationDate(), savedOrder.getStatus());
+            kafkaTemplate.send("notificationTopic", objectMapper.writeValueAsString(orderNotificationEvent));
+            OrderValidationEvent orderValidationEvent = new OrderValidationEvent(
+                    OrderMapper.INSTANCE.modelToDto(savedOrder),  ZonedDateTime.now()
             );
-            orderValidationTemplate.send("orderPlacedTopic", new OrderValidationEvent(
-                    order, "validation", ZonedDateTime.now()
-            ) );
+            kafkaTemplate.send("orderPlacedTopic",objectMapper.writeValueAsString(orderValidationEvent));
+
 
         } catch (KafkaProducerException e){
             //temporary solution
             throw new OrderBadRequestException(e.getMessage());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
         }
         return "ORDER PLACED AS PENDING";
     }
 
-    private static List<String> validateInventory(Map<String, Integer> inventoryMap, CartDto cart){
-        List<String> lowQuantityItems = new ArrayList<>();
-        for (CartItemDto cartItemDto : cart.getItemList()) {
-            if (inventoryMap.get(cartItemDto.getProductId()) == null) {
-                log.severe("Unsupported item with id: " + cartItemDto.getProductId() +
-                        ", order is refused (inventory returned null)");
-                throw new OrderBadRequestException("Unsupported item with id: " + cartItemDto.getProductId() +
-                        ", order is refused (inventory returned null)");
-            }
-            if (cartItemDto.getQuantity() > inventoryMap.get(cartItemDto.getProductId())) {
-                lowQuantityItems.add(cartItemDto.getProductId());
-            }
+    @Transactional
+    public Optional<Order> updateOrderStatus(UUID orderId, String status){
+        Optional<Order> order = orderRepository.findById(orderId);
+        if(order.isPresent()){
+            Order newOrder = order.get();
+            newOrder.setStatus(status);
+            return Optional.of(orderRepository.save(newOrder));
+        } else {
+            return Optional.empty();
         }
-        return lowQuantityItems;
-    }
-
-    private static Map<String, Integer> getInventoryMap(List<InventoryDto> inventory){
-        Map<String, Integer> inventoryMap = new HashMap<>();
-        inventory.forEach(inventoryDto -> {
-            inventoryMap.put(inventoryDto.getProductId(), inventoryDto.getQuantity());
-        });
-        return inventoryMap;
     }
 
     private static Order convertCartToOrder(CartDto cart){
@@ -104,16 +98,18 @@ public class OrderService {
         order.setUserId(cart.getUserId());
         order.setCreationDate(ZonedDateTime.now());
         List<OrderItem> orderItemList = new ArrayList<>();
-        long i = 0;
-        for(CartItemDto cartItemDto:cart.getItemList()){
+
+        for (CartItemDto cartItemDto : cart.getItemList()) {
             OrderItem orderItem = new OrderItem();
-            orderItem.setId(i);
-            i++;
             orderItem.setQuantity(cartItemDto.getQuantity());
             orderItem.setProductId(cartItemDto.getProductId());
+            orderItem.setOrder(order);
             orderItemList.add(orderItem);
         }
+
+        // Set OrderItems to the Order
         order.setOrderItemList(orderItemList);
+
         return order;
     }
 }

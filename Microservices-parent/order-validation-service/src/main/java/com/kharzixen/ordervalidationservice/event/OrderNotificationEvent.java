@@ -1,4 +1,4 @@
-package com.kharzixen.notificationservice.event;
+package com.kharzixen.ordervalidationservice.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +10,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderPlacedEvent {
+public class OrderNotificationEvent {
     private UUID orderId;
     private String userId;
     private ZonedDateTime creationDate;

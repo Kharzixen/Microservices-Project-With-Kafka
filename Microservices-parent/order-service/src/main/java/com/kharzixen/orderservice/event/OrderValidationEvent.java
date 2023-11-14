@@ -1,5 +1,6 @@
 package com.kharzixen.orderservice.event;
 
+import com.kharzixen.orderservice.dto.OrderDto;
 import com.kharzixen.orderservice.model.Order;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +14,6 @@ import java.time.ZonedDateTime;
 @NoArgsConstructor
 @Builder
 public class OrderValidationEvent {
-    private Order order;
-    private String message;
+    private OrderDto orderDto;
     private ZonedDateTime eventPublishedDate;
 }

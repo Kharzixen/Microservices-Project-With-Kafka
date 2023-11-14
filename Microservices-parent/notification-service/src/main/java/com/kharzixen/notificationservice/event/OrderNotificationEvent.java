@@ -1,4 +1,4 @@
-package com.kharzixen.orderservice.event;
+package com.kharzixen.notificationservice.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

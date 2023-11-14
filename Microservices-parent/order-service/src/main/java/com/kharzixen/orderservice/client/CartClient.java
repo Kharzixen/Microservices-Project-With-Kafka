@@ -1,13 +1,11 @@
 package com.kharzixen.orderservice.client;
 
-import com.kharzixen.orderservice.Dto.CartDto;
+import com.kharzixen.orderservice.dto.CartDto;
 import com.kharzixen.orderservice.error_handling.exceptions.ClientConnectionException;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import java.util.Arrays;
 
 @Component
 @AllArgsConstructor

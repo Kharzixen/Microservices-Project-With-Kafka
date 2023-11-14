@@ -19,7 +19,7 @@ public class OrderItem {
     private String productId;
     private int quantity;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id")
     private Order order;
 }

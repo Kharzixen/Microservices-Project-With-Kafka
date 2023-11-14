@@ -1,5 +1,6 @@
-package com.kharzixen.orderservice.model;
+package com.kharzixen.orderservice.dto;
 
+import com.kharzixen.orderservice.model.OrderItem;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,21 +12,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@Table(name = "orders")
-public class Order {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+public class OrderDto {
+
     private UUID id;
     private String userId;
     private ZonedDateTime creationDate;
     private String status;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @Builder.Default
-    private List<OrderItem> orderItemList = new ArrayList<>();
+    private List<OrderItemDto> orderItemList;
 }

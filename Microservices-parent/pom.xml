@@ -22,7 +22,7 @@
         <module>discovery-server</module>
         <module>api-gateway</module>
         <module>notification-service</module>
-        <module>discovery-server/order-validation-service</module>
+        <module>order-validation-service</module>
     </modules>
 
     <properties>

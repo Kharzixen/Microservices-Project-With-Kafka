@@ -1,4 +1,4 @@
-package com.kharzixen.orderservice.Dto;
+package com.kharzixen.ordervalidationservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CartItemDto {
-    private String id;
+
+public class OrderItemDto {
+    private Long id;
     private String productId;
     private int quantity;
 }

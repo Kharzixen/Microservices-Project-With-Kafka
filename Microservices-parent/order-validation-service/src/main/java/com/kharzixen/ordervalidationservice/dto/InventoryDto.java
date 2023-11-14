@@ -1,4 +1,4 @@
-package com.kharzixen.orderservice.Dto;
+package com.kharzixen.ordervalidationservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

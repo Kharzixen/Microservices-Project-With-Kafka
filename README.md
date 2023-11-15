@@ -9,6 +9,8 @@
 
 ## Introduction
 
+![Test Image 1](utils/architechture.png)
+
 This README provides an overview of the Microservices Project, an architecture that comprises multiple microservices to create a scalable and modular system. The project is designed to handle various aspects of a hypothetical e-commerce platform, including user management, product catalog, shopping cart, order processing, inventory management, and notifications.
 
 The project employs a combination of synchronous and asynchronous communication between services to ensure efficient data exchange and scalability. The core technologies used in this project include `WebClient` for synchronous communication, Apache Kafka for asynchronous messaging, Spring Cloud Netflix for service discovery, and Spring Cloud Gateway for the microservices gateway.

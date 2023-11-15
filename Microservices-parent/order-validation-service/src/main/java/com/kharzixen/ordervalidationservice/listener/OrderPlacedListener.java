@@ -37,7 +37,9 @@ public class OrderPlacedListener {
                         orderValidationEvent.getOrderDto().getId(), "validated");
                 kafkaTemplate.send("orderStatusTopic", objectMapper.writeValueAsString(orderStatusChangeEvent));
             } else {
-                log.info("Received order is invalid");
+                OrderStatusChangeEvent orderStatusChangeEvent = new OrderStatusChangeEvent(
+                        orderValidationEvent.getOrderDto().getId(), "refused - no inventory");
+                kafkaTemplate.send("orderStatusTopic", objectMapper.writeValueAsString(orderStatusChangeEvent));
             }
         } catch (OrderInvalidException e){
             log.info(e.getMessage());

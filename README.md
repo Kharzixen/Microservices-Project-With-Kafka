@@ -2,18 +2,38 @@
  
 > [!WARNING]
 > This software is unfinished. Keep your expectations low.
->
+> <details>
 > Please be aware that this project is currently in an unfinished state and may have incomplete features or issues. While we are actively working on it, there might be bugs, missing functionality, or unpolished areas. 
-> 
+>
 > If you encounter any issues, have feedback, or want to provide tips or suggestions for improvement, we welcome your input. Feel free to reach out to us at `mellau.mark12@gmail.com` with your feedback and concerns. Your input will be greatly appreciated in helping us improve this project.
+> </details>
+
 
 ## Introduction
 
-![Test Image 1](utils/architechture.png)
-
-This README provides an overview of the Microservices Project, an architecture that comprises multiple microservices to create a scalable and modular system. The project is designed to handle various aspects of a hypothetical e-commerce platform, including user management, product catalog, shopping cart, order processing, inventory management, and notifications.
+### Introduction:
+This README provides an overview of the Microservices Project, an architecture that comprises multiple microservices to create a scalable and modular system. The project is designed to handle various aspects of a hypothetical e-commerce platform.
 
 The project employs a combination of synchronous and asynchronous communication between services to ensure efficient data exchange and scalability. The core technologies used in this project include `WebClient` for synchronous communication, Apache Kafka for asynchronous messaging, Spring Cloud Netflix for service discovery, and Spring Cloud Gateway for the microservices gateway.
+
+### Architecture diagram:
+![Test Image 1](utils/architechture.png)
+
+The architecture of this microservices project is designed to showcase both asynchronous (async) and synchronous (sync) communication patterns. The diagram illustrates the interactions between different services, utilizing a combination of RESTful APIs and event-driven communication.
+
+#### Key Components:
+
+1. **Microservices:**
+    - Each box represents an individual microservice responsible for specific business functionalities.
+    - Dotted lines represent asynchronous communication (e.g., Kafka messaging) between services, emphasizing the event-driven nature.
+
+2. **API Gateway:**
+    - The API Gateway is responsible for handling incoming requests from clients and directing them to the appropriate microservice.
+    - It serves as a central entry point for external communication and can provide functionalities such as routing and load balancing.
+
+#### Note:
+- The diagram does not explicitly depict the Discovery Service, which plays a crucial role in service registration and discovery within a microservices architecture. Although not shown, the project includes a Discovery Service implementation.
+
 
 ## Table of Contents
 1. [Services](#services)
@@ -32,6 +52,9 @@ The project consists of the following microservices:
 4. **Order Service**: Processes and manages customer orders.
 5. **Inventory Service**: Manages product inventory levels.
 6. **Notification Service**: Handles notifications to users, such as order confirmations and updates.
+7. **Order Validation Service**: This service is responsible for validating incoming orders to ensure they meet certain criteria (enough products in the inventory).
+8. **Order Validation Retry Service**: his service may handle retry mechanisms for orders in cause of an unjust refusal (if inventory service is down).
+   Implements retry logic, such as periodic revalidation attempts.
 
 Each microservice is designed to be self-contained and independently deployable, allowing for flexibility and scalability.
 

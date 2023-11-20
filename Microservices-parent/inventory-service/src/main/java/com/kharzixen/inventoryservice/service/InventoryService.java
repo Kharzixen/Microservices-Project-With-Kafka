@@ -1,11 +1,16 @@
 package com.kharzixen.inventoryservice.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kharzixen.inventoryservice.dto.incomming.InventoryInDto;
 import com.kharzixen.inventoryservice.dto.outgoing.InventoryOutDto;
+import com.kharzixen.inventoryservice.event.InventoryChangedEvent;
 import com.kharzixen.inventoryservice.mapper.InventoryMapper;
 import com.kharzixen.inventoryservice.model.Inventory;
 import com.kharzixen.inventoryservice.repository.InventoryRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
@@ -16,8 +21,11 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class InventoryService {
     private final InventoryRepository inventoryRepository;
+    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final ObjectMapper objectMapper;
 
     public InventoryOutDto createInventory(InventoryInDto inventoryInDto) {
         Inventory inventory = InventoryMapper.INSTANCE.dtoToModel(inventoryInDto);
@@ -28,6 +36,12 @@ public class InventoryService {
             inventory.setQuantity(0);
         }
         Inventory saved = inventoryRepository.save(inventory);
+        InventoryChangedEvent inventoryChangedEvent = new InventoryChangedEvent(saved.getProductId(), saved.getQuantity());
+        try {
+            kafkaTemplate.send("inventoryChangedTopic", objectMapper.writeValueAsString(inventoryChangedEvent) );
+        } catch (JsonProcessingException e) {
+            log.error("Could not convert event to json: " + inventoryChangedEvent);
+        }
         return InventoryMapper.INSTANCE.modelToDto(saved);
     }
 

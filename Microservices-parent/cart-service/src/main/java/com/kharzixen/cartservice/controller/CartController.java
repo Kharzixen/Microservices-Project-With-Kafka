@@ -28,8 +28,12 @@ public class CartController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartDtoOut>> getAllCarts(){
-        return new ResponseEntity<>(cartService.getAllCarts(), HttpStatus.OK);
+    public ResponseEntity<?> getAllCarts(@RequestParam(name = "userId", required = false) String userId){
+        if(userId == null) {
+            return new ResponseEntity<>(cartService.getAllCarts(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(cartService.getCartByUser(userId), HttpStatus.OK);
+        }
     }
 
     @GetMapping("/{id}")

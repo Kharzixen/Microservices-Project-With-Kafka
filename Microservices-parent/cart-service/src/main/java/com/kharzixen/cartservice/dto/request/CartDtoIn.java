@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CartDtoIn {
     private String userId;
+    private String userEmail;
 }

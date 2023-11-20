@@ -65,7 +65,7 @@ public class OrderService {
                     savedOrder.getId(), savedOrder.getUserId(), savedOrder.getCreationDate(), savedOrder.getStatus());
             kafkaTemplate.send("notificationTopic", objectMapper.writeValueAsString(orderNotificationEvent));
             OrderValidationEvent orderValidationEvent = new OrderValidationEvent(
-                    OrderMapper.INSTANCE.modelToDto(savedOrder),  ZonedDateTime.now()
+                    OrderMapper.INSTANCE.modelToDto(savedOrder),  new Date()
             );
             kafkaTemplate.send("orderPlacedTopic",objectMapper.writeValueAsString(orderValidationEvent));
 
@@ -96,7 +96,7 @@ public class OrderService {
         order.setId(UUID.randomUUID());
         order.setStatus("pending");
         order.setUserId(cart.getUserId());
-        order.setCreationDate(ZonedDateTime.now());
+        order.setCreationDate(new Date());
         List<OrderItem> orderItemList = new ArrayList<>();
 
         for (CartItemDto cartItemDto : cart.getItemList()) {

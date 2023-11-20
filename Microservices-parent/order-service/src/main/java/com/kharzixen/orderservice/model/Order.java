@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,7 +23,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String userId;
-    private ZonedDateTime creationDate;
+    private Date creationDate;
     private String status;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

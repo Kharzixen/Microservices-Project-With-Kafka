@@ -43,7 +43,7 @@ public class ItemService {
             cartRepository.save(cart);
             return ItemMapper.INSTANCE.modelToDetailedDto(item);
         } else {
-            throw new CartNotFoundException(cartId);
+            throw new CartNotFoundException("cartId", cartId);
         }
     }
 
@@ -56,7 +56,7 @@ public class ItemService {
             cartRepository.save(cart);
             return countDeleted;
         } else {
-            throw new CartNotFoundException(cartId);
+            throw new CartNotFoundException("cartId", cartId);
         }
     }
 
@@ -72,7 +72,7 @@ public class ItemService {
             itemRepository.deleteById(itemId);
             cart.getItemList().removeIf(item -> Objects.equals(item.getId(), itemId));
         } else {
-            throw new CartNotFoundException(cartId);
+            throw new CartNotFoundException("cartId", cartId);
         }
     }
 

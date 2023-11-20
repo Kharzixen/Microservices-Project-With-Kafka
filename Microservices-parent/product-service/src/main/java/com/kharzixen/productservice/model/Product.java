@@ -25,5 +25,7 @@ public class Product {
 
     private BigDecimal price;
 
+    private int inventory;
+
 
 }

@@ -5,11 +5,8 @@ import com.kharzixen.ordervalidationservice.dto.InventoryDto;
 import com.kharzixen.ordervalidationservice.dto.OrderDto;
 import com.kharzixen.ordervalidationservice.dto.OrderItemDto;
 import com.kharzixen.ordervalidationservice.error_handling.exception.OrderInvalidException;
-import com.kharzixen.ordervalidationservice.model.Order;
-import com.kharzixen.ordervalidationservice.model.OrderItem;
 import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

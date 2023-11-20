@@ -26,6 +26,7 @@ public class Cart {
 
     @Indexed(unique = true)
     private String userId;
+    private String userEmail;
 
     @DBRef
     @Builder.Default

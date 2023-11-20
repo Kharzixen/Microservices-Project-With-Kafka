@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 @Data
@@ -13,6 +13,6 @@ import java.util.UUID;
 public class OrderNotificationEvent {
     private UUID orderId;
     private String userId;
-    private ZonedDateTime creationDate;
+    private Date creationDate;
     private String status;
 }

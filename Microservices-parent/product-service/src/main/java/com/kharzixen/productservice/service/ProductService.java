@@ -9,6 +9,7 @@ import com.kharzixen.productservice.repository.ProductRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +39,21 @@ public class ProductService {
         return optional.map(productResponseMapper::mapToDto);
     }
 
+    @Transactional
     public void deleteProduct(String id){
         productRepository.deleteById(id);
+    }
+
+    @Transactional
+    public Optional<Product> updateProductInventory(String productId, int inventory){
+        Optional<Product> optionalProduct =  productRepository.findById(productId);
+        if(optionalProduct.isPresent()){
+            Product product = optionalProduct.get();
+            product.setInventory(inventory);
+            Product saved = productRepository.save(product);
+            return Optional.of(saved);
+        } else {
+            return Optional.empty();
+        }
     }
 }

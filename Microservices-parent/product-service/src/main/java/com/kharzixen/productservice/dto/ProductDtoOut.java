@@ -20,4 +20,6 @@ public class ProductDtoOut {
 
     private BigDecimal price;
 
+    private int inventory;
+
 }

@@ -1,18 +1,15 @@
-package com.kharzixen.ordervalidationservice.model;
+package com.kharzixen.productservice.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-
-public class OrderItem {
-    private Long id;
-    private String productId;
-    private int quantity;
+public class InventoryChangedEvent {
+    String productId;
+    int inventory;
 }

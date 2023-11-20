@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class CartDtoOutNoItems {
     private String id;
     private String userId;
+    private String userEmail;
 }

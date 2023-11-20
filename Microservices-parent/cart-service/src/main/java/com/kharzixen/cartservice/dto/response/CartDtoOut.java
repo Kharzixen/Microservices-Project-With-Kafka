@@ -14,6 +14,6 @@ import java.util.List;
 public class CartDtoOut {
     private String id;
     private String userId;
-
+    private String userEmail;
     private List<ItemDtoOut> itemList;
 }

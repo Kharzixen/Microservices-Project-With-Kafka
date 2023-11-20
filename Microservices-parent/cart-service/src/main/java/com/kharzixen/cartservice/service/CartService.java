@@ -38,12 +38,21 @@ public class CartService {
         return carts.stream().map(CartMapper.INSTANCE::modelToDto).toList();
     }
 
+    public CartDtoOut getCartByUser(String userId) throws CartNotFoundException {
+        Optional<Cart> optionalCart = cartRepository.getCartByUserId(userId);
+        if(optionalCart.isPresent()){
+            return CartMapper.INSTANCE.modelToDto(optionalCart.get());
+        } else {
+            throw new CartNotFoundException("userId", userId);
+        }
+    }
+
     public CartDtoOut getCartById(String cartId) throws CartNotFoundException {
         Optional<Cart> optionalCart = cartRepository.findById(cartId);
         if(optionalCart.isPresent()){
             return CartMapper.INSTANCE.modelToDto(optionalCart.get());
         } else {
-            throw new CartNotFoundException(cartId);
+            throw new CartNotFoundException("cartId", cartId);
         }
     }
 
@@ -54,7 +63,7 @@ public class CartService {
             itemRepository.deleteByCart(optionalCart.get());
             cartRepository.deleteById(cartId);
         } else {
-            throw new CartNotFoundException(cartId);
+            throw new CartNotFoundException("cartId", cartId);
         }
 
     }
